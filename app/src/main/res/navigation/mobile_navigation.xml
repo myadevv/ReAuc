@@ -22,4 +22,15 @@
         android:name="com.myproject.reauc.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_orderlist"
+        android:name="com.myproject.reauc.ui.gallery.GalleryFragment"
+        android:label="@string/menu_orderlist"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_slideshow" />
 </navigation>

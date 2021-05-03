@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -23,10 +24,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.Volley;
+import com.myproject.reauc.AppHelper;
 import com.myproject.reauc.MainActivity;
 import com.myproject.reauc.R;
-import com.myproject.reauc.ui.login.LoginViewModel;
-import com.myproject.reauc.ui.login.LoginViewModelFactory;
+
+import com.myproject.reauc.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,9 +42,13 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+        if(AppHelper.requestQueue == null)
+            AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
+
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
+        final Button registerButton = findViewById(R.id.register);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -119,6 +126,16 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void updateUiWithUser(LoggedInUserView model) {

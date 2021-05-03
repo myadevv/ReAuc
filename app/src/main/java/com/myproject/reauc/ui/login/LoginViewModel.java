@@ -53,10 +53,8 @@ public class LoginViewModel extends ViewModel {
 
     // A placeholder username validation check
     private boolean isUserNameValid(String username) {
-        if (username == null) {
-            return false;
-        }
-        return true;
+        return username != null && username.trim().length() > 5;
+
         /*
         if (username.contains("@")) {
             return Patterns.EMAIL_ADDRESS.matcher(username).matches();
@@ -64,13 +62,10 @@ public class LoginViewModel extends ViewModel {
             return !username.trim().isEmpty();
         }
         */
-        // TODO: Re-activate usernameValid condition
     }
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null;
-        // return password != null && password.trim().length() > 5;
-        // TODO: Re-activate passwordValid condition
+        return password != null && password.trim().length() > 5;
     }
 }
