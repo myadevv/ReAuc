@@ -1,23 +1,38 @@
 package com.myproject.reauc.data.model;
 
-/**
- * Data class that captures user information for logged in users retrieved from LoginRepository
- */
 public class LoggedInUser {
 
-    private String userId;
-    private String displayName;
+    private static String userId;
+    private static String displayName;
+    private static int point;
 
-    public LoggedInUser(String userId, String displayName) {
-        this.userId = userId;
-        this.displayName = displayName;
-    }
-
-    public String getUserId() {
+    public static String getUserId() {
         return userId;
     }
 
-    public String getDisplayName() {
+    public static String getDisplayName() {
         return displayName;
+    }
+
+    public static int getPoint() {
+        return point;
+    }
+
+    public static void setUserId(String userId) {
+        LoggedInUser.userId = userId;
+    }
+
+    public static void setDisplayName(String displayName) {
+        LoggedInUser.displayName = displayName;
+    }
+
+    public static void setPoint(int point) {
+        LoggedInUser.point = point;
+    }
+
+    public static void logout() {
+        userId = null;
+        displayName = null;
+        point = 0;
     }
 }

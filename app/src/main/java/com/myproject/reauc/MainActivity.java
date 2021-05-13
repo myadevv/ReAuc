@@ -1,11 +1,13 @@
 package com.myproject.reauc;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewParent;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -14,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -22,6 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.myproject.reauc.data.model.LoggedInUser;
 import com.myproject.reauc.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        TextView displayNameView = (TextView)navigationView.getHeaderView(0).findViewById(R.id.displayName);
+        displayNameView.setText(LoggedInUser.getDisplayName().concat(" 님"));
+        TextView pointView = (TextView)navigationView.getHeaderView(0).findViewById(R.id.currentPoint);
+        pointView.setText(Integer.toString(LoggedInUser.getPoint()).concat(" p"));
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -66,10 +75,25 @@ public class MainActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
 
                 if(id == R.id.nav_logout){
-                    Toast.makeText(context, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    AlertDialog.Builder msgBuilder = new AlertDialog.Builder(context)
+                            .setTitle("정말 로그아웃 하시겠습니까?")
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    LoggedInUser.logout();
+                                    Toast.makeText(context, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Toast.makeText(MainActivity.this, "로그아웃을 취소했습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    msgBuilder.create().show();
                 }
 
                 return true;

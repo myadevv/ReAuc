@@ -20,7 +20,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">정길호 님</string>
-    <string name="nav_header_subtitle">myadevv@gmail.com</string>
+    <string name="nav_header_subtitle">0 포인트</string>
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="menu_home">Home</string>
@@ -28,6 +28,8 @@
     <string name="menu_slideshow">포인트 충전</string>
     <string name="menu_orderlist">주문 내역 보기</string>
     <string name="menu_logout">로그아웃</string>
+
+    <string name="debug_message">myadevv</string>
 
     <string name="action_settings">Settings</string>
 </resources>
