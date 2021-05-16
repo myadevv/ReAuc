@@ -50,8 +50,8 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    //final static String url = "http://60.253.14.126:8080/MyAuction/Android/login_pass.jsp";
-    final static String url = "http://10.0.2.2:8080/MyAuction/Android/login_pass.jsp";
+    //final static String url = "http://10.0.2.2:8080/MyAuction/Android/login_pass.jsp";
+    final static String url = AppHelper.SERVER_URL + "login_pass.jsp";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -74,7 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
                 int id = menuItem.getItemId();
 
-                if(id == R.id.nav_logout){
+                if(id == R.id.nav_gallery){
+                    navController.navigate(R.id.action_nav_gallery);
+                }
+                else if(id == R.id.nav_slideshow){
+                    navController.navigate(R.id.action_nav_slideshow);
+                }
+                else if(id == R.id.nav_logout){
                     AlertDialog.Builder msgBuilder = new AlertDialog.Builder(context)
                             .setTitle("정말 로그아웃 하시겠습니까?")
                             .setPositiveButton("예", new DialogInterface.OnClickListener() {

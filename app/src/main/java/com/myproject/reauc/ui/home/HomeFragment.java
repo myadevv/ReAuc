@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.myproject.reauc.AppHelper;
 import com.myproject.reauc.R;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private final static String url = AppHelper.SERVER_URL + "listboard.jsp";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,5 +33,9 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    private void getBoardlist() {
+
     }
 }

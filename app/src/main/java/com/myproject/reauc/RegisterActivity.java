@@ -23,7 +23,8 @@ import com.android.volley.AuthFailureError;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    final static String url = "http://10.0.2.2:8080/MyAuction/Android/register_pass.jsp";
+    //final static String url = "http://10.0.2.2:8080/MyAuction/Android/register_pass.jsp";
+    final static String url = AppHelper.SERVER_URL + "register_pass.jsp";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +52,14 @@ public class RegisterActivity extends AppCompatActivity {
                 final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        String text = "통신 성공 : " + response;
-                        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                        response = response.trim();
+                        if (response.equals("OK")) {
+                            Toast.makeText(getApplicationContext(), "회원 가입이 완료되었습니다.", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            String text = "회원 가입 실패 : " + response;
+                            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                        }
                         Log.d("ddeebbuugg", response);
                         finish();
                     }
