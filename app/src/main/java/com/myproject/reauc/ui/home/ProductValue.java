@@ -1,0 +1,44 @@
+package com.myproject.reauc.ui.home;
+
+public class ProductValue {
+    private int resId;
+    private String title;
+    private String price;
+    private String name;
+    private String imageDir;
+
+    // will be deprecated
+    public String description;
+    public String registerDate;
+    public String endDate;
+
+    public int getResId() {
+        return resId;
+    }
+
+    public void setResId(int resId) {
+        this.resId = resId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPrice() { return price; }
+
+    public void setPrice(String price) { this.price = price; };
+
+    public void setPrice(int price) { this.price = Integer.toString(price); }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getImageDir() { return imageDir; }
+
+    public void setImageDir(String imageDir) { this.imageDir = imageDir; }
+}

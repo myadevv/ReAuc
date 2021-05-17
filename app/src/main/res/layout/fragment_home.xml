@@ -7,6 +7,25 @@
     tools:context=".ui.home.HomeFragment"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ListView
+            android:id="@+id/productListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="5dp"
+            android:divider="@color/white"
+            />
+
+    </LinearLayout>
+
+    <!--
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/productLayout01"
         android:layout_width="match_parent"
@@ -41,9 +60,9 @@
     <View
         android:id="@+id/contentline01"
         android:layout_width="0dp"
-        android:layout_height="2dp"
+        android:layout_height="5dp"
         android:layout_centerInParent="true"
-        android:background="@color/black"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/productLayout01"
         app:layout_constraintStart_toStartOf="parent"
         />
@@ -83,10 +102,11 @@
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_centerInParent="true"
-        android:background="@color/black"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/productLayout02"
         app:layout_constraintStart_toStartOf="parent"
         />
+    -->
 
     <TextView
         android:id="@+id/text_home"
@@ -97,6 +117,7 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="20sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

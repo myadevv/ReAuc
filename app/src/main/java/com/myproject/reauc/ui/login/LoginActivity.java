@@ -26,12 +26,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.myproject.reauc.AppHelper;
 import com.myproject.reauc.MainActivity;
@@ -163,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     try {
                         String result = response.getString("result");
-                        Log.d(String.valueOf(R.string.debug_message), result);
+                        Log.d(getString(R.string.debug_message), result);
                         if (result.equals("OK")) {
                             int point = response.getInt("point");
                             LoggedInUser.setPoint(point);
@@ -180,9 +180,9 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (error.getMessage() == null)
-                        Log.d(String.valueOf(R.string.debug_message), "VolleyError Exception: check network status");
+                        Log.d(getString(R.string.debug_message), "VolleyError Exception: check network status");
                     else
-                        Log.d(String.valueOf(R.string.debug_message), error.getMessage());
+                        Log.d(getString(R.string.debug_message), error.getMessage());
                     showLoginFailed(new LoginResult(R.string.login_failed).getError());
                 }
             }) {
