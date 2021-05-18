@@ -1,5 +1,6 @@
 package com.myproject.reauc.ui.newproduct;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -28,8 +30,8 @@ import androidx.loader.content.CursorLoader;
 import com.myproject.reauc.AppHelper;
 import com.myproject.reauc.MainActivity;
 import com.myproject.reauc.R;
-
-import android.app.AlertDialog;
+import com.myproject.reauc.data.model.LoggedInUser;
+import com.myproject.reauc.ui.login.LoginActivity;
 
 import org.json.JSONObject;
 
@@ -41,6 +43,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,10 +60,12 @@ import okhttp3.Response;
 import static android.app.Activity.RESULT_OK;
 
 public class ProductRegisterFragment extends Fragment {
-    private static final String url = AppHelper.SERVER_URL + "image_upload.jsp";
-    //private static final String url = "http://60.253.14.126:8080/MyAuction/Android/image_upload.jsp";
+    private static final String url = AppHelper.SERVER_URL + "product_upload.jsp";
     EditText imgPathText;
     ImageView imageView;
+    EditText titleText;
+    EditText descriptionText;
+    EditText priceText;
     String localImgPath = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -71,6 +77,9 @@ public class ProductRegisterFragment extends Fragment {
         Button uploadBtn = root.findViewById(R.id.uploadButton);
         imgPathText = root.findViewById(R.id.editTextImagePath);
         imageView = root.findViewById(R.id.tempImageView);
+        titleText = root.findViewById(R.id.titleEditText);
+        descriptionText = root.findViewById(R.id.descriptionEditText);
+        priceText = root.findViewById(R.id.priceEditText);
 
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,34 +97,56 @@ public class ProductRegisterFragment extends Fragment {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                post(url, localImgPath, new Callback() {
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (response.isSuccessful()) {
-                            String responseStr = response.body().string();
-                            Log.d(getString(R.string.debug_message), responseStr);
+                androidx.appcompat.app.AlertDialog.Builder msgBuilder = new AlertDialog.Builder(getContext())
+                        .setTitle("이대로 상품을 등록하시겠습니까?")
+                        .setPositiveButton("등록하기", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                post(url, localImgPath, new Callback() {
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        String msg = response.body().string();
+                                        if (response.isSuccessful() && msg.trim().equals("OK")) {
+                                            getActivity().runOnUiThread(new Runnable(){
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(getContext(), "게시물이 등록되었습니다", Toast.LENGTH_LONG).show();
+                                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager().
+                                                            getPrimaryNavigationFragment().getChildFragmentManager();
+                                                    fragmentManager.beginTransaction().remove(ProductRegisterFragment.this).commit();
+                                                    fragmentManager.popBackStack();
+                                                }
+                                            });
+                                        } else {
+                                            Log.d(getString(R.string.debug_message), msg);
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(getContext(), "게시물 등록에 실패했습니다. " + msg, Toast.LENGTH_LONG).show();
+                                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager().
+                                                            getPrimaryNavigationFragment().getChildFragmentManager();
+                                                    fragmentManager.beginTransaction().remove(ProductRegisterFragment.this).commit();
+                                                    fragmentManager.popBackStack();
+                                                }
+                                            });
+                                        }
+                                    }
 
-                            getActivity().runOnUiThread(new Runnable(){
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getContext(), "게시물이 등록되었습니다", Toast.LENGTH_LONG).show();
-                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager().
-                                            getPrimaryNavigationFragment().getChildFragmentManager();
-                                    fragmentManager.beginTransaction().remove(ProductRegisterFragment.this).commit();
-                                    fragmentManager.popBackStack();
-                                }
-                            });
-                        } else {
-                            Log.d(getString(R.string.debug_message), response.message());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                        //new AlertDialog.Builder(getContext()).setMessage("Error : " + e.getMessage()).create().show();
-                    }
-                });
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        e.printStackTrace();
+                                        //new AlertDialog.Builder(getContext()).setMessage("Error : " + e.getMessage()).create().show();
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //ignore
+                            }
+                        });
+                msgBuilder.create().show();
             }
         });
 
@@ -124,18 +155,30 @@ public class ProductRegisterFragment extends Fragment {
 
     private Call post(String url, String imgPath, Callback callback) {
         Call call = null;
+        String name = LoggedInUser.getUserId();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar end = Calendar.getInstance();
+        end.setTime(new java.util.Date());
+        end.add(Calendar.DATE, 3);
+
+        String endDate = format.format(end.getTime());
+
         try {
             File sourceFile = new File(imgPath);
             Log.d(getString(R.string.debug_message), "File...::::" + sourceFile + " : " + sourceFile.exists());
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
             String filename = imgPath.substring(imgPath.lastIndexOf("/")+1);
-            int imgNum = 9903;
 
             // OKHTTP3
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("img", filename, RequestBody.create(MEDIA_TYPE_PNG, sourceFile))
-                    .addFormDataPart("num", Integer.toString(imgNum))
+                    .addFormDataPart("title", titleText.getText().toString())
+                    .addFormDataPart("description", descriptionText.getText().toString())
+                    .addFormDataPart("price", priceText.getText().toString())
+                    .addFormDataPart("endDate", endDate)
+                    .addFormDataPart("name", name)
                     .build();
 
             Request request = new Request.Builder()
