@@ -25,89 +25,6 @@
 
     </LinearLayout>
 
-    <!--
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/productLayout01"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/image01"
-            android:layout_width="150dp"
-            android:layout_height="0dp"
-            android:src="@drawable/sample"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></ImageView>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/materialText01"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="제목 1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image01"
-            app:layout_constraintTop_toTopOf="parent"></com.google.android.material.textview.MaterialTextView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/contentline01"
-        android:layout_width="0dp"
-        android:layout_height="5dp"
-        android:layout_centerInParent="true"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/productLayout01"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/productLayout02"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:layout_constraintTop_toBottomOf="@id/contentline01"
-        >
-
-        <ImageView
-            android:id="@+id/image02"
-            android:layout_width="150dp"
-            android:layout_height="0dp"
-            android:src="@drawable/sample"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></ImageView>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/materialText02"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="제목 12345"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image02"
-            app:layout_constraintTop_toTopOf="parent"></com.google.android.material.textview.MaterialTextView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/contentline02"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_centerInParent="true"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/productLayout02"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-    -->
-
     <TextView
         android:id="@+id/text_home"
         android:layout_width="match_parent"
@@ -122,4 +39,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/homeLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

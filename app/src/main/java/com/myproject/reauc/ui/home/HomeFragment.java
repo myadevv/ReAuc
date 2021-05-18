@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
     View root;
     TextView text;
     ListView listView;
+    ProgressBar loadingBar;
     ProductAdapter adapter = new ProductAdapter();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,6 +66,8 @@ public class HomeFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_home, container, false);
         text = root.findViewById(R.id.text_home);
         listView = root.findViewById(R.id.productListView);
+        loadingBar = root.findViewById(R.id.homeLoading);
+
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -78,6 +82,7 @@ public class HomeFragment extends Fragment {
 
 
     private void getListboard() {
+        loadingBar.setVisibility(View.VISIBLE);
         try {
             final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
                 @Override
@@ -102,7 +107,6 @@ public class HomeFragment extends Fragment {
                                 String endDate = jObject.getString("endDate");
                                 String description = jObject.getString("description");
                                 String name = jObject.getString("name");
-
                                 String imageDir = jObject.getString("imageDir");
 
                                 vo.setResId(num);
@@ -110,11 +114,12 @@ public class HomeFragment extends Fragment {
                                 vo.setName(name);
                                 vo.setPrice(price);
                                 vo.setImageDir(imageDir);
+                                vo.setEndDate(endDate);
 
                                 // will be deprecated
                                 vo.description = description;
-                                vo.endDate = endDate;
                                 vo.registerDate = registerDate;
+
                                 adapter.addItem(vo);
                             }
                             listView.setAdapter(adapter);
@@ -137,5 +142,6 @@ public class HomeFragment extends Fragment {
         catch (Exception e) {
             e.printStackTrace();
         }
+        loadingBar.setVisibility(View.GONE);
     }
 }

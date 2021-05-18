@@ -6,11 +6,11 @@ public class ProductValue {
     private String price;
     private String name;
     private String imageDir;
+    private String endDate;
 
     // will be deprecated
     public String description;
     public String registerDate;
-    public String endDate;
 
     public int getResId() {
         return resId;
@@ -30,9 +30,9 @@ public class ProductValue {
 
     public String getPrice() { return price; }
 
-    public void setPrice(String price) { this.price = price; };
+    public void setPrice(String price) { this.price = price + " p"; };
 
-    public void setPrice(int price) { this.price = Integer.toString(price); }
+    public void setPrice(int price) { this.price = price + " p"; }
 
     public String getName() { return name; }
 
@@ -41,4 +41,8 @@ public class ProductValue {
     public String getImageDir() { return imageDir; }
 
     public void setImageDir(String imageDir) { this.imageDir = imageDir; }
+
+    public String getEndDate() { return endDate; }
+
+    public void setEndDate(String endDate) { this.endDate = endDate + "까지"; }
 }

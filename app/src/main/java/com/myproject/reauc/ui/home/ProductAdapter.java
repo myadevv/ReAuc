@@ -3,6 +3,7 @@ package com.myproject.reauc.ui.home;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
 import com.myproject.reauc.AppHelper;
-import com.myproject.reauc.MainActivity;
 import com.myproject.reauc.R;
 
 import java.util.ArrayList;
@@ -54,7 +54,9 @@ public class ProductAdapter extends BaseAdapter {
             holder = new CustomViewHolder();
             holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
             holder.textTitle = (TextView) convertView.findViewById(R.id.text_title);
-            holder.textContent = (TextView) convertView.findViewById(R.id.text_content);
+            holder.textName = (TextView) convertView.findViewById(R.id.text_sellerName);
+            holder.textPrice = (TextView) convertView.findViewById(R.id.text_price);
+            holder.textEndDate = (TextView) convertView.findViewById(R.id.text_end_date);
 
             convertView.setTag(holder);
         } else {
@@ -63,14 +65,20 @@ public class ProductAdapter extends BaseAdapter {
 
         ProductValue vo = listCustom.get(position);
 
+        GradientDrawable drawable = (GradientDrawable) parent.getContext().getDrawable(R.drawable.background_rounding);
+        holder.imageView.setBackground(drawable);
+        holder.imageView.setClipToOutline(true);
+
         String imageUrl = AppHelper.SERVER_URL + "Image/" + vo.getResId() + "/" + vo.getImageDir();
         getImage(imageUrl, parent, holder);
 
         holder.textTitle.setText(vo.getTitle());
-        holder.textContent.setText(vo.getName());
+        holder.textName.setText(vo.getName());
+        holder.textPrice.setText(vo.getPrice());
+        holder.textEndDate.setText(vo.getEndDate());
 
         convertView.setOnClickListener(new View.OnClickListener() {
-            String msg = vo.description + " /// " + vo.getPrice() + " /// " + vo.registerDate + " /// " + vo.endDate;
+            String msg = vo.description + " /// " + vo.getPrice() + " /// " + vo.registerDate + " /// " + vo.getEndDate();
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder msgBuilder = new AlertDialog.Builder(v.getContext())
@@ -98,7 +106,9 @@ public class ProductAdapter extends BaseAdapter {
     class CustomViewHolder {
         ImageView imageView;
         TextView textTitle;
-        TextView textContent;
+        TextView textName;
+        TextView textPrice;
+        TextView textEndDate;
     }
 
     // MainActivity에서 Adapter에있는 ArrayList에 data를 추가시켜주는 함수

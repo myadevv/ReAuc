@@ -12,22 +12,22 @@
         tools:layout="@layout/fragment_home"/>
 
     <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_register"
         android:name="com.myproject.reauc.ui.newproduct.ProductRegisterFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_point_charge" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.myproject.reauc.ui.slideshow.SlideshowFragment"
+        android:id="@+id/nav_point"
+        android:name="com.myproject.reauc.ui.pointcharge.PointFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_product_register" />
 
     <fragment
         android:id="@+id/nav_orderlist"
-        android:name="com.myproject.reauc.ui.newproduct.ProductRegisterFragment"
+        android:name="com.myproject.reauc.ShowProductFragment"
         android:label="@string/menu_orderlist"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_point_charge" />
 
     <fragment
         android:id="@+id/nav_logout"
@@ -35,11 +35,15 @@
         tools:layout="@layout/fragment_product_register" />
 
     <action
-        android:id="@+id/action_nav_gallery"
-        app:destination="@id/nav_gallery" />
+        android:id="@+id/action_nav_register"
+        app:destination="@id/nav_register" />
 
     <action
-        android:id="@+id/action_nav_slideshow"
-        app:destination="@id/nav_slideshow" />
+        android:id="@+id/action_nav_point"
+        app:destination="@id/nav_point" />
+
+    <action
+        android:id="@+id/action_orderlist"
+        app:destination="@id/nav_orderlist" />
 
 </navigation>

@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -74,12 +72,16 @@ public class MainActivity extends AppCompatActivity {
 
                 int id = menuItem.getItemId();
 
-                if(id == R.id.nav_gallery){
-                    navController.navigate(R.id.action_nav_gallery);
+                if(id == R.id.nav_register){
+                    navController.navigate(R.id.action_nav_register);
                 }
-                else if(id == R.id.nav_slideshow){
-                    navController.navigate(R.id.action_nav_slideshow);
+                else if(id == R.id.nav_point){
+                    navController.navigate(R.id.action_nav_point);
                 }
+                else if (id == R.id.nav_orderlist) {
+                    navController.navigate(R.id.action_orderlist);
+                }
+
                 else if(id == R.id.nav_logout){
                     AlertDialog.Builder msgBuilder = new AlertDialog.Builder(context)
                             .setTitle("정말 로그아웃 하시겠습니까?")

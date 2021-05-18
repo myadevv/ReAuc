@@ -1,4 +1,4 @@
-package com.myproject.reauc.ui.slideshow;
+package com.myproject.reauc.ui.pointcharge;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,15 +14,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.myproject.reauc.R;
 
-public class SlideshowFragment extends Fragment {
+public class PointFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
+    private PointViewModel slideshowViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+                new ViewModelProvider(this).get(PointViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_point_charge, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
         slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

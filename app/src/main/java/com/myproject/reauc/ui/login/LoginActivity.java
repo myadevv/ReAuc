@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     //final static String url = "http://10.0.2.2:8080/MyAuction/Android/login_pass.jsp";
     final static String url = AppHelper.SERVER_URL + "login_pass.jsp";
+    ProgressBar loadingProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final Button registerButton = findViewById(R.id.register);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        loadingProgressBar = findViewById(R.id.loading);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -173,16 +174,13 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                     catch (JSONException e) {
-                        Log.e(String.valueOf(R.string.debug_message), e.getMessage());
+                        e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if (error.getMessage() == null)
-                        Log.d(getString(R.string.debug_message), "VolleyError Exception: check network status");
-                    else
-                        Log.d(getString(R.string.debug_message), error.getMessage());
+                    error.printStackTrace();
                     showLoginFailed(new LoginResult(R.string.login_failed).getError());
                 }
             }) {
@@ -204,6 +202,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
+        loadingProgressBar.setVisibility(View.GONE);
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         LoggedInUser.setUserId(model.getDisplayName());
@@ -215,6 +214,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
+        loadingProgressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }
