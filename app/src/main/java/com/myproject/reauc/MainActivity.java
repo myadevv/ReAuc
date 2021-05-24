@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -75,13 +76,15 @@ public class MainActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
 
                 if(id == R.id.nav_register){
-                    navController.navigate(R.id.action_nav_register);
+                    replaceFragment(R.id.action_nav_register);
                 }
                 else if(id == R.id.nav_point){
-                    navController.navigate(R.id.action_nav_point);
+                    replaceFragment(R.id.action_nav_point);
+                    //navController.navigate(R.id.action_nav_point);
                 }
                 else if (id == R.id.nav_orderlist) {
-                    navController.navigate(R.id.action_orderlist);
+                    replaceFragment(R.id.action_orderlist);
+                    //navController.navigate(R.id.action_orderlist);
                 }
 
                 else if(id == R.id.nav_logout){
@@ -123,5 +126,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void replaceFragment(int resId) {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.navigate(resId);
     }
 }

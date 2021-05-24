@@ -1,8 +1,10 @@
-package com.myproject.reauc.ui.home;
+package com.myproject.reauc.ui.showproduct;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,8 @@ import com.android.volley.request.ImageRequest;
 import com.myproject.reauc.AppHelper;
 import com.myproject.reauc.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ProductAdapter extends BaseAdapter {
@@ -54,7 +58,7 @@ public class ProductAdapter extends BaseAdapter {
             holder = new CustomViewHolder();
             holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
             holder.textTitle = (TextView) convertView.findViewById(R.id.text_title);
-            holder.textName = (TextView) convertView.findViewById(R.id.text_sellerName);
+            holder.textStatus = (TextView) convertView.findViewById(R.id.text_sellerName); // will replace to 거래 내역
             holder.textPrice = (TextView) convertView.findViewById(R.id.text_price);
             holder.textEndDate = (TextView) convertView.findViewById(R.id.text_end_date);
 
@@ -73,11 +77,28 @@ public class ProductAdapter extends BaseAdapter {
         getImage(imageUrl, parent, holder);
 
         holder.textTitle.setText(vo.getTitle());
-        holder.textName.setText(vo.getName());
         holder.textPrice.setText(vo.getPrice());
-        holder.textEndDate.setText(vo.getEndDate());
 
-        /*
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String endDate = vo.getEndDate();
+        holder.textEndDate.setText(endDate + "까지");
+
+        try {
+            java.util.Date date = format.parse(endDate);
+            if (date.compareTo(new java.util.Date()) > 0)
+                holder.textStatus.setText("입찰 중");
+            else
+                holder.textStatus.setText("입찰 종료");
+
+            if (vo.getPayedStatus())
+                holder.textStatus.setTextColor(Color.BLUE);
+            else
+                holder.textStatus.setTextColor(Color.RED);
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         convertView.setOnClickListener(new View.OnClickListener() {
             // TODO: contents 프래그먼트와 연결
             // TODO: 이것은 여기가 아니라 HomeFragment에서 listview.setOnItemClickListener 구현으로 구현해야 함
@@ -103,7 +124,6 @@ public class ProductAdapter extends BaseAdapter {
                 msgBuilder.create().show();
             }
         });
-        */
 
         return convertView;
     }
@@ -111,7 +131,7 @@ public class ProductAdapter extends BaseAdapter {
     class CustomViewHolder {
         ImageView imageView;
         TextView textTitle;
-        TextView textName;
+        TextView textStatus;
         TextView textPrice;
         TextView textEndDate;
     }

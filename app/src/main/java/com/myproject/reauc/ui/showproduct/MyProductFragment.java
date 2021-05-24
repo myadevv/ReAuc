@@ -1,102 +1,56 @@
-package com.myproject.reauc.ui.home;
+package com.myproject.reauc.ui.showproduct;
 
-import android.content.ContentProvider;
-import android.content.ContentProviderClient;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.ContentFrameLayout;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.error.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
-import com.android.volley.request.ImageRequest;
 import com.android.volley.request.JsonObjectRequest;
 import com.myproject.reauc.AppHelper;
-import com.myproject.reauc.MainActivity;
 import com.myproject.reauc.R;
-import com.myproject.reauc.RegisterActivity;
 import com.myproject.reauc.data.model.LoggedInUser;
-import com.myproject.reauc.ui.ContentFragment;
-import com.myproject.reauc.ui.login.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.util.HashMap;
-import java.util.Map;
+public class MyProductFragment extends Fragment {
+    private final static String url = AppHelper.SERVER_URL + "get_myproduct.jsp";
 
-public class HomeFragment extends Fragment {
-
-    private HomeViewModel homeViewModel;
-    private final static String url = AppHelper.SERVER_URL + "listboard.jsp";
-    View root;
-    TextView text;
-    ListView listView;
-    ProgressBar loadingBar;
     ProductAdapter adapter = new ProductAdapter();
+    ListView listView;
+    TextView text;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-        root = inflater.inflate(R.layout.fragment_home, container, false);
-        text = root.findViewById(R.id.text_home);
-        listView = root.findViewById(R.id.productListView);
-        loadingBar = root.findViewById(R.id.homeLoading);
 
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                text.setText(s);
-            }
-        });
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_myproduct, container, false);
 
-        getListboard();
+        listView = rootView.findViewById(R.id.myproductListView);
+        text = rootView.findViewById(R.id.text_myproduct);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ProductValue vo = (ProductValue) parent.getItemAtPosition(position);
-                AppHelper.posNum = vo.getResId();
-                ((MainActivity)getActivity()).replaceFragment(R.id.action_contents);
-            }
-        });
+        getMyProduct();
 
-        return root;
+
+        return rootView;
     }
 
-
-    private void getListboard() {
-        loadingBar.setVisibility(View.VISIBLE);
+    private void getMyProduct() {
         try {
-            final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+            JSONObject params = new JSONObject();
+            params.put("id", LoggedInUser.getUserId());
+            final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d(getString(R.string.debug_message), response.toString());
@@ -120,6 +74,7 @@ public class HomeFragment extends Fragment {
                                 String description = jObject.getString("description");
                                 String name = jObject.getString("name");
                                 String imageDir = jObject.getString("imageDir");
+                                String payed = jObject.getString("payedStatus");
 
                                 vo.setResId(num);
                                 vo.setTitle(title);
@@ -127,6 +82,7 @@ public class HomeFragment extends Fragment {
                                 vo.setPrice(price);
                                 vo.setImageDir(imageDir);
                                 vo.setEndDate(endDate);
+                                vo.setPayedStatus(payed);
 
                                 // will be deprecated
                                 vo.description = description;
@@ -154,6 +110,6 @@ public class HomeFragment extends Fragment {
         catch (Exception e) {
             e.printStackTrace();
         }
-        loadingBar.setVisibility(View.GONE);
     }
+
 }

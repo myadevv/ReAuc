@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/nav_orderlist"
-        android:name="com.myproject.reauc.ShowProductFragment"
+        android:name="com.myproject.reauc.ui.showproduct.ShowProductFragment"
         android:label="@string/menu_orderlist"
         tools:layout="@layout/fragment_point_charge" />
 
@@ -33,6 +33,12 @@
         android:id="@+id/nav_logout"
         android:label="@string/menu_logout"
         tools:layout="@layout/fragment_product_register" />
+
+    <fragment
+        android:id="@+id/nav_content"
+        android:name="com.myproject.reauc.ui.ContentFragment"
+        android:label="자세히 보기"
+        tools:layout="@layout/fragment_contents" />
 
     <action
         android:id="@+id/action_nav_register"
@@ -45,5 +51,9 @@
     <action
         android:id="@+id/action_orderlist"
         app:destination="@id/nav_orderlist" />
+
+    <action
+        android:id="@+id/action_contents"
+        app:destination="@id/nav_content" />
 
 </navigation>

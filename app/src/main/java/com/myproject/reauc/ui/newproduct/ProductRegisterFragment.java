@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class ProductRegisterFragment extends Fragment {
     EditText descriptionText;
     EditText priceText;
     String localImgPath = "";
+    ProgressBar loading;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class ProductRegisterFragment extends Fragment {
         titleText = root.findViewById(R.id.titleEditText);
         descriptionText = root.findViewById(R.id.descriptionEditText);
         priceText = root.findViewById(R.id.priceEditText);
+        loading = root.findViewById(R.id.productRegisterLoading);
 
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,11 +100,26 @@ public class ProductRegisterFragment extends Fragment {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (titleText.getText().toString().isEmpty() || descriptionText.getText().toString().isEmpty()
+                        || priceText.getText().toString().isEmpty() || imgPathText.getText().toString().isEmpty() ) {
+                    Toast.makeText(getContext(), "제목, 내용, 가격, 이미지 파일 중 빈 칸이 없는지 확인해주세요.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                else
+                    try {
+                        Integer.parseInt(priceText.getText().toString());
+                    }
+                    catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
                 androidx.appcompat.app.AlertDialog.Builder msgBuilder = new AlertDialog.Builder(getContext())
                         .setTitle("이대로 상품을 등록하시겠습니까?")
                         .setPositiveButton("등록하기", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                loading.setVisibility(View.VISIBLE);
                                 post(url, localImgPath, new Callback() {
                                     @Override
                                     public void onResponse(Call call, Response response) throws IOException {
@@ -110,6 +128,7 @@ public class ProductRegisterFragment extends Fragment {
                                             getActivity().runOnUiThread(new Runnable(){
                                                 @Override
                                                 public void run() {
+                                                    loading.setVisibility(View.GONE);
                                                     Toast.makeText(getContext(), "게시물이 등록되었습니다", Toast.LENGTH_LONG).show();
                                                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager().
                                                             getPrimaryNavigationFragment().getChildFragmentManager();
@@ -122,11 +141,8 @@ public class ProductRegisterFragment extends Fragment {
                                             getActivity().runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    loading.setVisibility(View.GONE);
                                                     Toast.makeText(getContext(), "게시물 등록에 실패했습니다. " + msg, Toast.LENGTH_LONG).show();
-                                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager().
-                                                            getPrimaryNavigationFragment().getChildFragmentManager();
-                                                    fragmentManager.beginTransaction().remove(ProductRegisterFragment.this).commit();
-                                                    fragmentManager.popBackStack();
                                                 }
                                             });
                                         }
