@@ -16,20 +16,11 @@ import com.myproject.reauc.R;
 
 public class PointFragment extends Fragment {
 
-    private PointViewModel slideshowViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                new ViewModelProvider(this).get(PointViewModel.class);
         View root = inflater.inflate(R.layout.fragment_point_charge, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
         return root;
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.myproject.reauc.AppHelper;
+import com.myproject.reauc.MainActivity;
 import com.myproject.reauc.R;
 import com.myproject.reauc.data.model.LoggedInUser;
 
@@ -42,6 +44,14 @@ public class MyProductFragment extends Fragment {
 
         getMyProduct();
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProductValue vo = (ProductValue) parent.getItemAtPosition(position);
+                AppHelper.posNum = vo.getResId();
+                ((MainActivity)getActivity()).replaceFragment(R.id.action_contents);
+            }
+        });
 
         return rootView;
     }

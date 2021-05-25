@@ -2,11 +2,13 @@ package com.myproject.reauc.ui.login;
 
 import android.app.Activity;
 
+import android.app.AlertDialog;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -50,7 +52,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    //final static String url = "http://10.0.2.2:8080/MyAuction/Android/login_pass.jsp";
+
     final static String url = AppHelper.SERVER_URL + "login_pass.jsp";
     ProgressBar loadingProgressBar;
 
@@ -83,26 +85,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginFormState.getPasswordError() != null) {
                     passwordEditText.setError(getString(loginFormState.getPasswordError()));
                 }
-            }
-        });
-
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                finish();
             }
         });
 
@@ -168,7 +150,11 @@ public class LoginActivity extends AppCompatActivity {
                         if (result.equals("OK")) {
                             int point = response.getInt("point");
                             LoggedInUser.setPoint(point);
-                            updateUiWithUser(new LoggedInUserView(username));
+                            String update = response.getString("update");
+                            if (update.equals("OK"))
+                                updateUiWithUser(new LoggedInUserView(username), true);
+                            else
+                                updateUiWithUser(new LoggedInUserView(username), false);
                         } else {
                             showLoginFailed(new LoginResult(R.string.login_failed).getError());
                         }
@@ -201,10 +187,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
+    private void updateUiWithUser(LoggedInUserView model, boolean update) {
         loadingProgressBar.setVisibility(View.GONE);
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        String msg = getString(R.string.welcome) + model.getDisplayName();
+        if (update)
+            msg += "\n\n 입찰 기한이 종료된 상품이 있습니다. [내 거래 내역 보기] > [상품 등록 내역]에서 확인해주세요.";
+
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
         LoggedInUser.setUserId(model.getDisplayName());
         LoggedInUser.setDisplayName(model.getDisplayName());
 

@@ -1,7 +1,6 @@
 package com.myproject.reauc.ui.showproduct;
 
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -26,7 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class ProductAdapter extends BaseAdapter {
+public class BillAdapter extends BaseAdapter {
 
     private ArrayList<ProductValue> listCustom = new ArrayList<>();
 
@@ -88,17 +87,19 @@ public class ProductAdapter extends BaseAdapter {
             if (date.compareTo(new java.util.Date()) > 0)
                 holder.textStatus.setText("입찰 중");
             else
-                holder.textStatus.setText("입찰 종료");
+                holder.textStatus.setText("거래 완료");
 
-            if (vo.getPayedStatus())
+            if (vo.getPayedStatus()) {
                 holder.textStatus.setTextColor(Color.BLUE);
-            else
+            }
+            else {
                 holder.textStatus.setTextColor(Color.RED);
+                holder.textStatus.setText("상위 입찰됨");
+            }
         }
         catch (ParseException e) {
             e.printStackTrace();
         }
-
         return convertView;
     }
 

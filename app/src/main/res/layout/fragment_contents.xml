@@ -34,6 +34,7 @@
             android:text="TITLE"
             android:textSize="30dp"
             android:textStyle="bold|italic"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/contentImage" />
 
@@ -45,6 +46,7 @@
             android:layout_marginTop="16dp"
             android:text="등록자 : 누구"
             android:textSize="18dp"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/contentTitleText" />
 
@@ -56,6 +58,7 @@
             android:layout_marginTop="16dp"
             android:text="DECRIPTION TEXT ..."
             android:textSize="15dp"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/contentSellerText" />
 
@@ -66,6 +69,7 @@
             android:layout_marginBottom="32dp"
             android:text="현재 입찰가 : 30000 p"
             android:textSize="24dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/contentBuyText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -107,7 +111,7 @@
             app:layout_constraintStart_toEndOf="@id/contentBuyText" />
 
         <TextView
-            android:id="@+id/buyErrorText"
+            android:id="@+id/contentErrorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"

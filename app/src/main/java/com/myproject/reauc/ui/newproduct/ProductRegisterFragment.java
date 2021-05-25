@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,9 +44,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +72,7 @@ public class ProductRegisterFragment extends Fragment {
     EditText titleText;
     EditText descriptionText;
     EditText priceText;
+    EditText yearText; EditText monthText; EditText dayText; EditText hourText; EditText minuteText;
     String localImgPath = "";
     ProgressBar loading;
 
@@ -83,6 +89,11 @@ public class ProductRegisterFragment extends Fragment {
         descriptionText = root.findViewById(R.id.descriptionEditText);
         priceText = root.findViewById(R.id.priceEditText);
         loading = root.findViewById(R.id.productRegisterLoading);
+        yearText = root.findViewById(R.id.yearEditText);
+        monthText = root.findViewById(R.id.monthEditText);
+        dayText = root.findViewById(R.id.dayEditText);
+        hourText = root.findViewById(R.id.hourEditText);
+        minuteText = root.findViewById(R.id.minuteEditText);
 
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,12 +108,23 @@ public class ProductRegisterFragment extends Fragment {
             }
         });
 
+        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date((new java.util.Date()).getTime() + (1000 * 3600 * 24)));
+
+        yearText.setText(datetime.substring(0, 4));
+        monthText.setText(datetime.substring(5, 7));
+        dayText.setText(datetime.substring(8, 10));
+        hourText.setText(datetime.substring(11, 13));
+        minuteText.setText(datetime.substring(14, 16));
+
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (titleText.getText().toString().isEmpty() || descriptionText.getText().toString().isEmpty()
-                        || priceText.getText().toString().isEmpty() || imgPathText.getText().toString().isEmpty() ) {
-                    Toast.makeText(getContext(), "제목, 내용, 가격, 이미지 파일 중 빈 칸이 없는지 확인해주세요.", Toast.LENGTH_LONG).show();
+                if (checkEmpty()) {
+                    Toast.makeText(getContext(), "제목, 내용, 가격, 이미지 파일 등 빈 칸이 없는지 확인해주세요.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                else if (checkValidDateTime()) {
+                    Toast.makeText(getContext(), "날짜 형식이 올바르지 않거나 과거 날짜입니다.", Toast.LENGTH_LONG).show();
                     return;
                 }
                 else
@@ -173,14 +195,11 @@ public class ProductRegisterFragment extends Fragment {
         Call call = null;
         String name = LoggedInUser.getUserId();
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Calendar end = Calendar.getInstance();
-        end.setTime(new java.util.Date());
-        end.add(Calendar.DATE, 3);
-
-        String endDate = format.format(end.getTime());
-
         try {
+            String endDate = yearText.getText().toString() + "-" + monthText.getText().toString()
+                    + "-" + dayText.getText().toString() + " " + hourText.getText().toString()
+                    + ":" + minuteText.getText().toString();
+
             File sourceFile = new File(imgPath);
             Log.d(getString(R.string.debug_message), "File...::::" + sourceFile + " : " + sourceFile.exists());
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
@@ -265,7 +284,7 @@ public class ProductRegisterFragment extends Fragment {
     }//onActivityResult()
 
     //Uri -- > 절대경로로 바꿔서 리턴시켜주는 메소드
-    String getRealPathFromUri(Uri uri){
+    private String getRealPathFromUri(Uri uri){
         String[] proj = {MediaStore.Images.Media.DATA};
         CursorLoader loader= new CursorLoader(getContext(), uri, proj, null, null, null);
         Cursor cursor= loader.loadInBackground();
@@ -274,5 +293,53 @@ public class ProductRegisterFragment extends Fragment {
         String result= cursor.getString(column_index);
         cursor.close();
         return result;
+    }
+
+    private boolean checkEmpty() {
+        return titleText.getText().toString().isEmpty() || descriptionText.getText().toString().isEmpty()
+                || priceText.getText().toString().isEmpty() || imgPathText.getText().toString().isEmpty()
+                || yearText.getText().toString().isEmpty() || monthText.getText().toString().isEmpty()
+                || dayText.getText().toString().isEmpty() || hourText.getText().toString().isEmpty()
+                || minuteText.getText().toString().isEmpty();
+    }
+
+    private boolean checkValidDateTime() {
+        Integer year = Integer.parseInt(yearText.getText().toString());
+        Integer month = Integer.parseInt(monthText.getText().toString());
+        Integer day = Integer.parseInt(dayText.getText().toString());
+        Integer hour = Integer.parseInt(hourText.getText().toString());
+        Integer minute = Integer.parseInt(minuteText.getText().toString());
+
+        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        java.util.Date now = new java.util.Date();
+
+        try {
+            java.util.Date date = form.parse(year.toString() + "-" + month.toString() + "-" + day.toString()
+                    + " " + hour.toString() + ":" + minute.toString());
+            if (now.compareTo(date) > 0)
+                return true;
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+            return true;
+        }
+
+        final ArrayList<Integer> month30 = new ArrayList();
+        month30.add(4); month30.add(6); month30.add(9); month30.add(11);
+
+        if (year <= 2020 || year >= 2100 || month < 1 || month > 12 || day < 1 || day > 31
+                || hour < 0 || hour >= 24 || minute < 0 || minute >= 60)
+            return true;
+
+        else if (month30.contains(month) && day == 31)
+            return true;
+
+        else if (month == 2) {
+             if (year % 4 == 0 && day > 29) return true;
+             else if (day > 28) return true;
+        }
+
+        return false;
+
     }
 }
